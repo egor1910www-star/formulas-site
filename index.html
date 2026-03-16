@@ -3,18 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 Шпаргалка: все формулы 5–11 класс (Математика + Физика)</title>
+    <title>📚 Шпаргалка: все формулы 5–11 класс</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
             background: #f0f4fa;
             color: #1a2b4c;
+        }
+
+        /* Экран логина */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0b1a2f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 50px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .login-box h2 {
+            color: #1e2f5a;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #b3c7f0;
+            border-radius: 30px;
+            font-size: 1rem;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 15px;
+            background: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .login-box button:hover {
+            background: #3046b0;
+        }
+
+        .login-error {
+            color: #dc2626;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+
+        #mainContent {
+            display: none;
         }
 
         .top-bar {
@@ -71,7 +137,6 @@
             padding: 25px 30px;
         }
 
-        /* Визуализация пути данных */
         .data-path {
             background: #0b1a2f;
             padding: 25px 30px;
@@ -342,109 +407,160 @@
             font-size: 1.2rem;
             color: #64748b;
         }
-
-        @media (max-width: 700px) {
-            .subject-tabs { flex-wrap: wrap; }
-            .add-form { grid-template-columns: 1fr; }
-            .save-btn { grid-column: span 1; }
-        }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <div class="logo">📘 Формуляриум · 5–11 класс</div>
-        <div>
-            <button class="admin-toggle" id="adminToggleBtn">🔐 Вход для администратора</button>
-            <span class="admin-panel-badge" id="adminBadge" style="display: none;">Admin ON</span>
+    <!-- Экран логина -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h2>🔐 Вход в панель администратора</h2>
+            <form id="loginForm">
+                <input type="text" id="login" placeholder="Логин" value="admin" required>
+                <input type="password" id="password" placeholder="Пароль" required>
+                <div class="login-error" id="loginError">Неверный логин или пароль</div>
+                <button type="submit">Войти</button>
+            </form>
         </div>
     </div>
 
-    <div class="container">
-        <!-- Визуализация пути данных -->
-        <div class="data-path" id="dataPath">
-            <div class="path-node">
-                <span class="node-icon">📱</span>
-                <span class="node-label">Клиент</span>
-            </div>
-            <span class="path-arrow">→</span>
-            <div class="path-node">
-                <span class="node-icon">🌐</span>
-                <span class="node-label">Интернет</span>
-            </div>
-            <span class="path-arrow">→</span>
-            <div class="path-node">
-                <span class="node-icon">⚙️</span>
-                <span class="node-label">Сервер</span>
-            </div>
-            <span class="path-arrow">→</span>
-            <div class="path-node">
-                <span class="node-icon">🗄️</span>
-                <span class="node-label">База данных</span>
-            </div>
-            <div class="path-status" id="pathStatus">⏳ Загрузка формул...</div>
-        </div>
-
-        <div class="nav-sections">
-            <div class="subject-tabs" id="subjectTabs">
-                <button class="subject-btn active" data-subject="math">📐 Математика</button>
-                <button class="subject-btn" data-subject="physics">⚡ Физика</button>
-            </div>
-            <div class="grade-filter" id="gradeFilter">
-                <button class="grade-btn active" data-grade="all">Все</button>
-                <button class="grade-btn" data-grade="5">5</button>
-                <button class="grade-btn" data-grade="6">6</button>
-                <button class="grade-btn" data-grade="7">7</button>
-                <button class="grade-btn" data-grade="8">8</button>
-                <button class="grade-btn" data-grade="9">9</button>
-                <button class="grade-btn" data-grade="10">10</button>
-                <button class="grade-btn" data-grade="11">11</button>
+    <!-- Основной контент (скрыт, пока не войдёшь) -->
+    <div id="mainContent">
+        <div class="top-bar">
+            <div class="logo">📘 Формуляриум · 5–11 класс</div>
+            <div>
+                <button class="admin-toggle" id="adminToggleBtn">🔐 Панель администратора</button>
+                <span class="admin-panel-badge" id="adminBadge" style="display: none;">Admin ON</span>
             </div>
         </div>
 
-        <div id="formulaGrid" class="formula-grid">
-            <div class="status-message">Загрузка формул из облачной базы данных...</div>
-        </div>
-
-        <div id="adminPanel" class="admin-section">
-            <div class="admin-header">
-                <h2>⚙️ Панель управления формулами</h2>
-                <button class="admin-btn" id="hideAdminBtn">Скрыть</button>
+        <div class="container">
+            <!-- Визуализация пути данных -->
+            <div class="data-path" id="dataPath">
+                <div class="path-node">
+                    <span class="node-icon">📱</span>
+                    <span class="node-label">Клиент</span>
+                </div>
+                <span class="path-arrow">→</span>
+                <div class="path-node">
+                    <span class="node-icon">🌐</span>
+                    <span class="node-label">Интернет</span>
+                </div>
+                <span class="path-arrow">→</span>
+                <div class="path-node">
+                    <span class="node-icon">⚙️</span>
+                    <span class="node-label">Сервер</span>
+                </div>
+                <span class="path-arrow">→</span>
+                <div class="path-node">
+                    <span class="node-icon">🗄️</span>
+                    <span class="node-label">База данных</span>
+                </div>
+                <div class="path-status" id="pathStatus">⏳ Загрузка формул...</div>
             </div>
 
-            <div class="add-form" id="addForm">
-                <input type="text" id="newTitle" placeholder="Название (теорема Пифагора)" required>
-                <select id="newSubject">
-                    <option value="math">Математика</option>
-                    <option value="physics">Физика</option>
-                </select>
-                <input type="number" id="newGrade" placeholder="Класс (5-11)" min="5" max="11" required>
-                <input type="text" id="newFormula" placeholder="a² + b² = c²" required>
-                <textarea id="newDesc" placeholder="Краткое описание / пояснение"></textarea>
-                <button class="save-btn" id="addFormulaBtn">➕ Добавить формулу в облако</button>
+            <div class="nav-sections">
+                <div class="subject-tabs" id="subjectTabs">
+                    <button class="subject-btn active" data-subject="math">📐 Математика</button>
+                    <button class="subject-btn" data-subject="physics">⚡ Физика</button>
+                </div>
+                <div class="grade-filter" id="gradeFilter">
+                    <button class="grade-btn active" data-grade="all">Все</button>
+                    <button class="grade-btn" data-grade="5">5</button>
+                    <button class="grade-btn" data-grade="6">6</button>
+                    <button class="grade-btn" data-grade="7">7</button>
+                    <button class="grade-btn" data-grade="8">8</button>
+                    <button class="grade-btn" data-grade="9">9</button>
+                    <button class="grade-btn" data-grade="10">10</button>
+                    <button class="grade-btn" data-grade="11">11</button>
+                </div>
             </div>
 
-            <table class="admin-table" id="adminTable">
-                <thead>
-                    <tr><th>ID</th><th>Название</th><th>Предмет</th><th>Класс</th><th>Формула</th><th>Действия</th></tr>
-                </thead>
-                <tbody id="adminTableBody"></tbody>
-            </table>
+            <div id="formulaGrid" class="formula-grid">
+                <div class="status-message">Загрузка формул из облачной базы данных...</div>
+            </div>
 
-            <div class="db-view" id="dbRawView"></div>
+            <div id="adminPanel" class="admin-section">
+                <div class="admin-header">
+                    <h2>⚙️ Панель управления формулами</h2>
+                    <button class="admin-btn" id="hideAdminBtn">Скрыть</button>
+                </div>
+
+                <div class="add-form" id="addForm">
+                    <input type="text" id="newTitle" placeholder="Название (теорема Пифагора)" required>
+                    <select id="newSubject">
+                        <option value="math">Математика</option>
+                        <option value="physics">Физика</option>
+                    </select>
+                    <input type="number" id="newGrade" placeholder="Класс (5-11)" min="5" max="11" required>
+                    <input type="text" id="newFormula" placeholder="a² + b² = c²" required>
+                    <textarea id="newDesc" placeholder="Краткое описание / пояснение"></textarea>
+                    <button class="save-btn" id="addFormulaBtn">➕ Добавить формулу в облако</button>
+                </div>
+
+                <table class="admin-table" id="adminTable">
+                    <thead>
+                        <tr><th>ID</th><th>Название</th><th>Предмет</th><th>Класс</th><th>Формула</th><th>Действия</th></tr>
+                    </thead>
+                    <tbody id="adminTableBody"></tbody>
+                </table>
+
+                <div class="db-view" id="dbRawView"></div>
+            </div>
         </div>
     </div>
 
     <script>
         (function() {
-            // ========== ТВОЯ ССЫЛКА НА БАЗУ ==========
+            // ========== ДАННЫЕ АДМИНА ==========
+            const ADMIN_LOGIN = 'admin';
+            const ADMIN_PASSWORD = 'admin123';
+            
+            // ========== ПРОВЕРКА АВТОРИЗАЦИИ ==========
+            let isAuthenticated = sessionStorage.getItem('auth') === 'true';
+            
+            // ========== ЭЛЕМЕНТЫ ==========
             const API_URL = 'https://69b7f28dffbcd0286096b93a.mockapi.io/questions';
+            const loginScreen = document.getElementById('loginScreen');
+            const mainContent = document.getElementById('mainContent');
+            const loginForm = document.getElementById('loginForm');
+            const loginError = document.getElementById('loginError');
+            const adminToggle = document.getElementById('adminToggleBtn');
+            const adminBadge = document.getElementById('adminBadge');
+            const adminPanel = document.getElementById('adminPanel');
+            const hideAdminBtn = document.getElementById('hideAdminBtn');
             
             // ========== СОСТОЯНИЕ ==========
             let formulasDB = [];
             let currentSubject = 'math';
             let currentGrade = 'all';
             let adminVisible = false;
-
+            
+            // ========== ПРОВЕРКА АВТОРИЗАЦИИ ПРИ ЗАГРУЗКЕ ==========
+            if (isAuthenticated) {
+                loginScreen.style.display = 'none';
+                mainContent.style.display = 'block';
+                loadFormulas();
+            } else {
+                loginScreen.style.display = 'flex';
+                mainContent.style.display = 'none';
+            }
+            
+            // ========== ОБРАБОТКА ВХОДА ==========
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const login = document.getElementById('login').value;
+                const password = document.getElementById('password').value;
+                
+                if (login === ADMIN_LOGIN && password === ADMIN_PASSWORD) {
+                    sessionStorage.setItem('auth', 'true');
+                    loginScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    loadFormulas();
+                } else {
+                    loginError.style.display = 'block';
+                }
+            });
+            
             // ========== ВИЗУАЛИЗАЦИЯ ПУТИ ==========
             function setPathStage(stage, details = '') {
                 const stages = ['client', 'internet', 'server', 'db'];
@@ -466,7 +582,7 @@
                 else if (stage === 'db') statusText = '🗄️ БД: ' + (details || 'выполнение запроса');
                 document.getElementById('pathStatus').innerText = statusText;
             }
-
+            
             // ========== ЗАГРУЗКА ИЗ БАЗЫ ==========
             async function loadFormulas() {
                 setPathStage('client');
@@ -490,7 +606,7 @@
                     setPathStage('client', 'Ошибка соединения');
                 }
             }
-
+            
             // ========== СОХРАНЕНИЕ (POST) ==========
             async function addFormulaToDB(formula) {
                 setPathStage('client');
@@ -516,7 +632,7 @@
                     alert('Ошибка при добавлении');
                 }
             }
-
+            
             // ========== УДАЛЕНИЕ ==========
             async function deleteFormulaFromDB(id) {
                 if (!confirm('Удалить формулу?')) return;
@@ -539,7 +655,7 @@
                     alert('Ошибка при удалении');
                 }
             }
-
+            
             // ========== РЕДАКТИРОВАНИЕ ==========
             async function editFormulaInDB(id, newData) {
                 setPathStage('client');
@@ -566,7 +682,7 @@
                     alert('Ошибка при редактировании');
                 }
             }
-
+            
             // ========== ОТРИСОВКА КАРТОЧЕК ==========
             function renderFormulaGrid() {
                 const grid = document.getElementById('formulaGrid');
@@ -575,18 +691,18 @@
                     grid.innerHTML = '<div class="status-message">📭 База данных пуста. Добавь первую формулу в админке!</div>';
                     return;
                 }
-
+                
                 const filtered = formulasDB.filter(f => {
                     if (f.subject !== currentSubject) return false;
                     if (currentGrade !== 'all' && f.grade != currentGrade) return false;
                     return true;
                 });
-
+                
                 if (filtered.length === 0) {
                     grid.innerHTML = '<div class="status-message">😕 Нет формул для этого фильтра</div>';
                     return;
                 }
-
+                
                 let html = '';
                 filtered.forEach(f => {
                     html += `
@@ -600,7 +716,7 @@
                 });
                 grid.innerHTML = html;
             }
-
+            
             // ========== ОТРИСОВКА АДМИНКИ ==========
             function renderAdminTable() {
                 const tbody = document.getElementById('adminTableBody');
@@ -621,20 +737,21 @@
                 tbody.innerHTML = rows;
                 document.getElementById('dbRawView').innerText = JSON.stringify(formulasDB, null, 2);
             }
-
+            
             function escapeHtml(text) {
                 if (!text) return '';
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
             }
-
+            
             // ========== ГЛОБАЛЬНЫЕ ФУНКЦИИ ==========
             window.deleteFormula = function(id) {
-                deleteFormulaFromDB(id);
+                if (isAuthenticated) deleteFormulaFromDB(id);
             };
-
+            
             window.editFormula = function(id) {
+                if (!isAuthenticated) return;
                 const f = formulasDB.find(f => f.id == id);
                 if (!f) return;
                 
@@ -649,30 +766,23 @@
                 
                 editFormulaInDB(id, { title: f.title, formula: f.formula, desc: f.desc });
             };
-
-            // ========== СОБЫТИЯ ==========
-            document.getElementById('addFormulaBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const title = document.getElementById('newTitle').value.trim();
-                const subject = document.getElementById('newSubject').value;
-                const grade = parseInt(document.getElementById('newGrade').value);
-                const formula = document.getElementById('newFormula').value.trim();
-                const desc = document.getElementById('newDesc').value.trim();
-
-                if (!title || !grade || !formula) {
-                    alert('Заполни название, класс и формулу');
-                    return;
-                }
-
-                addFormulaToDB({ title, subject, grade, formula, desc });
-                
-                document.getElementById('newTitle').value = '';
-                document.getElementById('newFormula').value = '';
-                document.getElementById('newDesc').value = '';
-                document.getElementById('newGrade').value = '';
+            
+            // ========== АДМИН ПАНЕЛЬ (ТОЛЬКО ДЛЯ АВТОРИЗОВАННЫХ) ==========
+            adminToggle.addEventListener('click', () => {
+                if (!isAuthenticated) return;
+                adminVisible = !adminVisible;
+                adminPanel.classList.toggle('visible', adminVisible);
+                adminBadge.style.display = adminVisible ? 'inline-block' : 'none';
+                if (adminVisible) renderAdminTable();
             });
-
+            
+            hideAdminBtn.addEventListener('click', () => {
+                adminVisible = false;
+                adminPanel.classList.remove('visible');
+                adminBadge.style.display = 'none';
+            });
+            
+            // ========== ФИЛЬТРЫ ==========
             document.querySelectorAll('.subject-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
@@ -681,7 +791,7 @@
                     renderFormulaGrid();
                 });
             });
-
+            
             document.querySelectorAll('.grade-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
@@ -690,28 +800,30 @@
                     renderFormulaGrid();
                 });
             });
-
-            // Админ панель
-            const adminPanel = document.getElementById('adminPanel');
-            const adminToggle = document.getElementById('adminToggleBtn');
-            const adminBadge = document.getElementById('adminBadge');
-            const hideAdminBtn = document.getElementById('hideAdminBtn');
-
-            adminToggle.addEventListener('click', () => {
-                adminVisible = !adminVisible;
-                adminPanel.classList.toggle('visible', adminVisible);
-                adminBadge.style.display = adminVisible ? 'inline-block' : 'none';
-                if (adminVisible) renderAdminTable();
+            
+            // ========== ДОБАВЛЕНИЕ ==========
+            document.getElementById('addFormulaBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!isAuthenticated) return;
+                
+                const title = document.getElementById('newTitle').value.trim();
+                const subject = document.getElementById('newSubject').value;
+                const grade = parseInt(document.getElementById('newGrade').value);
+                const formula = document.getElementById('newFormula').value.trim();
+                const desc = document.getElementById('newDesc').value.trim();
+                
+                if (!title || !grade || !formula) {
+                    alert('Заполни название, класс и формулу');
+                    return;
+                }
+                
+                addFormulaToDB({ title, subject, grade, formula, desc });
+                
+                document.getElementById('newTitle').value = '';
+                document.getElementById('newFormula').value = '';
+                document.getElementById('newDesc').value = '';
+                document.getElementById('newGrade').value = '';
             });
-
-            hideAdminBtn.addEventListener('click', () => {
-                adminVisible = false;
-                adminPanel.classList.remove('visible');
-                adminBadge.style.display = 'none';
-            });
-
-            // ========== СТАРТ ==========
-            loadFormulas();
         })();
     </script>
 </body>
