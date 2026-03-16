@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 QuizMaster · 180 вопросов</title>
+    <title>🎯 QuizMaster · Регистрация + Профиль</title>
     <style>
         * {
             margin: 0;
@@ -54,20 +54,6 @@
             flex-wrap: wrap;
         }
 
-        .nick-input {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 40px;
-            padding: 12px 24px;
-            color: white;
-            font-size: 1rem;
-            min-width: 200px;
-        }
-
-        .nick-input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
         .btn {
             padding: 12px 28px;
             border-radius: 40px;
@@ -97,6 +83,141 @@
         .btn-outline:hover {
             border-color: #8b5cf6;
             background: rgba(139, 92, 246, 0.1);
+        }
+
+        /* Модалки */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 40px;
+            width: 450px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-box h2 {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #334155;
+            border-radius: 30px;
+            background: #0f172a;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .modal-box input:focus {
+            outline: none;
+            border-color: #8b5cf6;
+        }
+
+        .modal-box .btn {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .modal-link {
+            color: #a78bfa;
+            text-align: center;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .modal-link:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Профиль */
+        .profile-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 40px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .profile-info {
+            color: white;
+        }
+
+        .profile-info h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+
+        .stat-label {
+            color: #a5b4fc;
+            font-size: 0.9rem;
+            margin-top: 5px;
         }
 
         .topics-grid {
@@ -280,44 +401,39 @@
             padding: 12px 15px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
-        .login-modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .login-box {
-            background: #1e293b;
-            padding: 40px;
-            border-radius: 40px;
-            width: 400px;
-            max-width: 90%;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #334155;
-            border-radius: 30px;
-            background: #0f172a;
-            color: white;
-        }
     </style>
 </head>
 <body>
     <div class="app">
         <div class="header">
             <div class="logo" id="logo">🎯 QuizMaster</div>
-            <div class="user-area">
-                <input type="text" class="nick-input" id="nickInput" placeholder="Твой никнейм">
-                <button class="btn btn-primary" id="loginBtn">Войти</button>
+            <div class="user-area" id="userArea">
+                <button class="btn btn-outline" id="showLoginBtn">🔐 Вход / Регистрация</button>
                 <button class="btn btn-outline" id="showRatingBtn">🏆 Рейтинг</button>
+            </div>
+        </div>
+
+        <!-- Профиль (показывается после входа) -->
+        <div id="profileArea" style="display: none;">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">👤</div>
+                    <div class="profile-info">
+                        <h3 id="profileUsername"></h3>
+                        <p id="profileEmail"></p>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="profileScore">0</div>
+                        <div class="stat-label">Всего очков</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="profileGames">0</div>
+                        <div class="stat-label">Пройдено тем</div>
+                    </div>
+                </div>
+                <button class="btn btn-outline" id="logoutBtn" style="width: 100%;">Выйти</button>
             </div>
         </div>
 
@@ -345,19 +461,49 @@
         </div>
     </div>
 
-    <div class="login-modal" id="adminLoginModal">
-        <div class="login-box">
-            <h2 style="color: white; margin-bottom: 20px;">🔐 Вход админа</h2>
+    <!-- Модалка входа/регистрации -->
+    <div class="modal" id="authModal">
+        <div class="modal-box">
+            <h2 id="authModalTitle">🔐 Вход</h2>
+            <div id="loginForm">
+                <input type="text" id="loginUsername" placeholder="Логин">
+                <input type="password" id="loginPassword" placeholder="Пароль">
+                <div class="error-message" id="loginError">Неверный логин или пароль</div>
+                <button class="btn btn-primary" id="loginBtn">Войти</button>
+                <div class="modal-link" id="showRegisterLink">Нет аккаунта? Зарегистрироваться</div>
+                <div class="modal-link" id="showForgotLink">Забыли пароль?</div>
+            </div>
+            <div id="registerForm" style="display: none;">
+                <input type="text" id="regUsername" placeholder="Логин">
+                <input type="email" id="regEmail" placeholder="Email (для восстановления)">
+                <input type="password" id="regPassword" placeholder="Пароль">
+                <input type="password" id="regPassword2" placeholder="Повторите пароль">
+                <div class="error-message" id="regError"></div>
+                <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
+                <div class="modal-link" id="showLoginLink">Уже есть аккаунт? Войти</div>
+            </div>
+            <div id="forgotForm" style="display: none;">
+                <input type="email" id="forgotEmail" placeholder="Ваш Email">
+                <div class="error-message" id="forgotError"></div>
+                <button class="btn btn-primary" id="forgotBtn">Восстановить пароль</button>
+                <div class="modal-link" id="showLoginFromForgot">Вернуться ко входу</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка админского входа -->
+    <div class="modal" id="adminLoginModal">
+        <div class="modal-box">
+            <h2>🔐 Вход администратора</h2>
             <input type="text" id="adminLogin" placeholder="Логин" value="admin">
             <input type="password" id="adminPass" placeholder="Пароль" value="admin123">
-            <button class="btn btn-primary" id="adminLoginBtn" style="width: 100%;">Войти</button>
+            <button class="btn btn-primary" id="adminLoginBtn">Войти</button>
         </div>
     </div>
 
     <script>
         (function() {
             // ========== КОНФИГ ==========
-            const API_TOPICS = 'https://69b7f28dffbcd0286096b93a.mockapi.io/topics';
             const API_DATA = 'https://69b7f28dffbcd0286096b93a.mockapi.io/data';
             const ADMIN_LOGIN = 'admin';
             const ADMIN_PASS = 'admin123';
@@ -370,7 +516,7 @@
             let selectedOption = null;
             let isAdmin = false;
 
-            // ========== ТЕМЫ (ЛОКАЛЬНО) ==========
+            // ========== ТЕМЫ ==========
             const topics = [
                 { id: 1, name: '🧮 Математика', icon: '🧮', count: 30 },
                 { id: 2, name: '⚡ Физика', icon: '⚡', count: 30 },
@@ -576,7 +722,7 @@
                 ]
             };
 
-            // ========== ЗАГРУЗКА ПОЛЬЗОВАТЕЛЕЙ ИЗ MOCKAPI ==========
+            // ========== API ФУНКЦИИ ==========
             async function loadUsers() {
                 try {
                     const res = await fetch(`${API_DATA}?type=user`);
@@ -603,17 +749,12 @@
                 });
             }
 
-            async function updateUserScore(userId, score) {
-                const users = await loadUsers();
-                const user = users.find(u => u.id === userId);
-                if(user) {
-                    user.score = score;
-                    await fetch(`${API_DATA}/${user.id}`, {
-                        method: 'PUT',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(user)
-                    });
-                }
+            async function updateUser(userId, data) {
+                await fetch(`${API_DATA}/${userId}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
             }
 
             async function saveAnswer(answer) {
@@ -624,7 +765,129 @@
                 });
             }
 
-            // ========== ОТРИСОВКА ТЕМ ==========
+            // ========== АВТОРИЗАЦИЯ ==========
+            const authModal = document.getElementById('authModal');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const forgotForm = document.getElementById('forgotForm');
+
+            document.getElementById('showLoginBtn').addEventListener('click', () => {
+                authModal.classList.add('active');
+                showLoginForm();
+            });
+
+            document.getElementById('showRegisterLink').addEventListener('click', () => {
+                showRegisterForm();
+            });
+
+            document.getElementById('showLoginLink').addEventListener('click', () => {
+                showLoginForm();
+            });
+
+            document.getElementById('showForgotLink').addEventListener('click', () => {
+                showForgotForm();
+            });
+
+            document.getElementById('showLoginFromForgot').addEventListener('click', () => {
+                showLoginForm();
+            });
+
+            function showLoginForm() {
+                document.getElementById('authModalTitle').textContent = '🔐 Вход';
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                forgotForm.style.display = 'none';
+            }
+
+            function showRegisterForm() {
+                document.getElementById('authModalTitle').textContent = '📝 Регистрация';
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                forgotForm.style.display = 'none';
+            }
+
+            function showForgotForm() {
+                document.getElementById('authModalTitle').textContent = '📧 Восстановление пароля';
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'none';
+                forgotForm.style.display = 'block';
+            }
+
+            // Регистрация
+            document.getElementById('registerBtn').addEventListener('click', async () => {
+                const username = document.getElementById('regUsername').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const password = document.getElementById('regPassword').value;
+                const password2 = document.getElementById('regPassword2').value;
+
+                if(!username || !email || !password) {
+                    document.getElementById('regError').textContent = 'Заполни все поля';
+                    document.getElementById('regError').style.display = 'block';
+                    return;
+                }
+
+                if(password !== password2) {
+                    document.getElementById('regError').textContent = 'Пароли не совпадают';
+                    document.getElementById('regError').style.display = 'block';
+                    return;
+                }
+
+                const users = await loadUsers();
+                if(users.find(u => u.username === username)) {
+                    document.getElementById('regError').textContent = 'Логин уже занят';
+                    document.getElementById('regError').style.display = 'block';
+                    return;
+                }
+
+                const newUser = {
+                    username: username,
+                    email: email,
+                    password: password,
+                    score: 0,
+                    gamesPlayed: 0,
+                    registered: new Date().toISOString()
+                };
+
+                await saveUser(newUser);
+                currentUser = newUser;
+                authModal.classList.remove('active');
+                updateProfile();
+            });
+
+            // Вход
+            document.getElementById('loginBtn').addEventListener('click', async () => {
+                const username = document.getElementById('loginUsername').value.trim();
+                const password = document.getElementById('loginPassword').value;
+
+                const users = await loadUsers();
+                const user = users.find(u => u.username === username && u.password === password);
+
+                if(user) {
+                    currentUser = user;
+                    authModal.classList.remove('active');
+                    updateProfile();
+                } else {
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            });
+
+            // Выход
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                currentUser = null;
+                document.getElementById('profileArea').style.display = 'none';
+                document.getElementById('quizArea').style.display = 'none';
+            });
+
+            function updateProfile() {
+                if(currentUser) {
+                    document.getElementById('profileArea').style.display = 'block';
+                    document.getElementById('profileUsername').textContent = currentUser.username;
+                    document.getElementById('profileEmail').textContent = currentUser.email || '';
+                    document.getElementById('profileScore').textContent = currentUser.score || 0;
+                }
+            }
+
+            // ========== ТЕМЫ ==========
             function renderTopics() {
                 const grid = document.getElementById('topicsGrid');
                 grid.innerHTML = topics.map(t => `
@@ -637,6 +900,10 @@
 
                 document.querySelectorAll('.topic-card').forEach(card => {
                     card.addEventListener('click', () => {
+                        if(!currentUser) {
+                            alert('Сначала войди или зарегистрируйся');
+                            return;
+                        }
                         document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
                         card.classList.add('selected');
                         const id = parseInt(card.dataset.id);
@@ -694,7 +961,8 @@
                     
                     if(correct) {
                         currentUser.score = (currentUser.score || 0) + 10;
-                        await updateUserScore(currentUser.id, currentUser.score);
+                        await updateUser(currentUser.id, currentUser);
+                        document.getElementById('profileScore').textContent = currentUser.score;
                     }
                 }
 
@@ -708,27 +976,6 @@
                     }
                 }, 1500);
             }
-
-            // ========== РЕГИСТРАЦИЯ ==========
-            document.getElementById('loginBtn').addEventListener('click', async () => {
-                const username = document.getElementById('nickInput').value.trim();
-                if(!username) return alert('Введи ник');
-                
-                const users = await loadUsers();
-                const existing = users.find(u => u.username === username);
-                if(existing) {
-                    currentUser = existing;
-                } else {
-                    currentUser = {
-                        id: Date.now().toString(),
-                        username: username,
-                        score: 0,
-                        registered: new Date().toISOString()
-                    };
-                    await saveUser(currentUser);
-                }
-                alert(`Привет, ${currentUser.username}!`);
-            });
 
             // ========== РЕЙТИНГ ==========
             document.getElementById('showRatingBtn').addEventListener('click', async () => {
@@ -747,7 +994,7 @@
             document.getElementById('logo').addEventListener('click', () => {
                 clickCount++;
                 if(clickCount >= 5) {
-                    document.getElementById('adminLoginModal').style.display = 'flex';
+                    document.getElementById('adminLoginModal').classList.add('active');
                     clickCount = 0;
                 }
                 setTimeout(() => clickCount = 0, 3000);
@@ -757,7 +1004,7 @@
                 const login = document.getElementById('adminLogin').value;
                 const pass = document.getElementById('adminPass').value;
                 if(login === ADMIN_LOGIN && pass === ADMIN_PASS) {
-                    document.getElementById('adminLoginModal').style.display = 'none';
+                    document.getElementById('adminLoginModal').classList.remove('active');
                     document.getElementById('adminArea').style.display = 'block';
                     showAdminUsers();
                 } else {
@@ -767,9 +1014,9 @@
 
             async function showAdminUsers() {
                 const users = await loadUsers();
-                let html = '<table class="admin-table"><tr><th>Игрок</th><th>Очки</th><th>Дата</th></tr>';
+                let html = '<table class="admin-table"><tr><th>ID</th><th>Логин</th><th>Email</th><th>Очки</th><th>Дата</th></tr>';
                 users.forEach(u => {
-                    html += `<tr><td>${u.username}</td><td>${u.score || 0}</td><td>${u.registered || ''}</td></tr>`;
+                    html += `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.email || '-'}</td><td>${u.score || 0}</td><td>${u.registered || ''}</td></tr>`;
                 });
                 html += '</table>';
                 document.getElementById('adminContent').innerHTML = html;
@@ -797,8 +1044,24 @@
                 document.getElementById('adminArea').style.display = 'none';
             });
 
+            // Закрытие модалок по клику вне
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if(e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            });
+
             // ========== СТАРТ ==========
             renderTopics();
+
+            // Проверка сохранённой сессии
+            const savedUser = localStorage.getItem('currentUser');
+            if(savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateProfile();
+            }
         })();
     </script>
 </body>
