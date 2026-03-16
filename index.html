@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 QuizMaster · Регистрация + Профиль</title>
+    <title>🎯 QuizMaster · Без паролей</title>
     <style>
         * {
             margin: 0;
@@ -54,6 +54,20 @@
             flex-wrap: wrap;
         }
 
+        .nick-input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 40px;
+            padding: 12px 24px;
+            color: white;
+            font-size: 1rem;
+            min-width: 200px;
+        }
+
+        .nick-input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
         .btn {
             padding: 12px 28px;
             border-radius: 40px;
@@ -85,139 +99,29 @@
             background: rgba(139, 92, 246, 0.1);
         }
 
-        /* Модалки */
-        .modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-box {
-            background: #1e293b;
-            padding: 40px;
-            border-radius: 40px;
-            width: 450px;
-            max-width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-box h2 {
-            color: white;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
-        }
-
-        .modal-box input {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #334155;
-            border-radius: 30px;
-            background: #0f172a;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .modal-box input:focus {
-            outline: none;
-            border-color: #8b5cf6;
-        }
-
-        .modal-box .btn {
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .modal-link {
-            color: #a78bfa;
-            text-align: center;
-            margin-top: 15px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        .modal-link:hover {
-            text-decoration: underline;
-        }
-
-        .error-message {
-            color: #ef4444;
-            font-size: 0.9rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        /* Профиль */
         .profile-card {
             background: rgba(255,255,255,0.05);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 40px;
-            padding: 30px;
+            padding: 20px;
             margin: 20px 0;
-        }
-
-        .profile-header {
             display: flex;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #8b5cf6, #ec4899);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: white;
+            justify-content: space-between;
         }
 
         .profile-info {
             color: white;
+            font-size: 1.2rem;
         }
 
-        .profile-info h3 {
-            font-size: 2rem;
-            margin-bottom: 5px;
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 30px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
+        .profile-score {
+            background: #8b5cf6;
+            padding: 10px 25px;
+            border-radius: 40px;
             font-weight: 700;
-            color: #8b5cf6;
-        }
-
-        .stat-label {
-            color: #a5b4fc;
-            font-size: 0.9rem;
-            margin-top: 5px;
+            font-size: 1.5rem;
         }
 
         .topics-grid {
@@ -401,39 +305,58 @@
             padding: 12px 15px;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
+
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 40px;
+            width: 400px;
+            max-width: 90%;
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #334155;
+            border-radius: 30px;
+            background: #0f172a;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="app">
         <div class="header">
             <div class="logo" id="logo">🎯 QuizMaster</div>
-            <div class="user-area" id="userArea">
-                <button class="btn btn-outline" id="showLoginBtn">🔐 Вход / Регистрация</button>
+            <div class="user-area">
+                <input type="text" class="nick-input" id="nickInput" placeholder="Твой ник" value="Игрок">
+                <button class="btn btn-primary" id="setNickBtn">▶ Играть</button>
                 <button class="btn btn-outline" id="showRatingBtn">🏆 Рейтинг</button>
             </div>
         </div>
 
-        <!-- Профиль (показывается после входа) -->
+        <!-- Профиль -->
         <div id="profileArea" style="display: none;">
             <div class="profile-card">
-                <div class="profile-header">
-                    <div class="profile-avatar" id="profileAvatar">👤</div>
-                    <div class="profile-info">
-                        <h3 id="profileUsername"></h3>
-                        <p id="profileEmail"></p>
-                    </div>
+                <div class="profile-info">
+                    Игрок: <span id="profileUsername"></span>
                 </div>
-                <div class="profile-stats">
-                    <div class="stat-card">
-                        <div class="stat-value" id="profileScore">0</div>
-                        <div class="stat-label">Всего очков</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="profileGames">0</div>
-                        <div class="stat-label">Пройдено тем</div>
-                    </div>
-                </div>
-                <button class="btn btn-outline" id="logoutBtn" style="width: 100%;">Выйти</button>
+                <div class="profile-score" id="profileScore">0</div>
             </div>
         </div>
 
@@ -461,664 +384,366 @@
         </div>
     </div>
 
-    <!-- Модалка входа/регистрации -->
-    <div class="modal" id="authModal">
-        <div class="modal-box">
-            <h2 id="authModalTitle">🔐 Вход</h2>
-            <div id="loginForm">
-                <input type="text" id="loginUsername" placeholder="Логин">
-                <input type="password" id="loginPassword" placeholder="Пароль">
-                <div class="error-message" id="loginError">Неверный логин или пароль</div>
-                <button class="btn btn-primary" id="loginBtn">Войти</button>
-                <div class="modal-link" id="showRegisterLink">Нет аккаунта? Зарегистрироваться</div>
-                <div class="modal-link" id="showForgotLink">Забыли пароль?</div>
-            </div>
-            <div id="registerForm" style="display: none;">
-                <input type="text" id="regUsername" placeholder="Логин">
-                <input type="email" id="regEmail" placeholder="Email (для восстановления)">
-                <input type="password" id="regPassword" placeholder="Пароль">
-                <input type="password" id="regPassword2" placeholder="Повторите пароль">
-                <div class="error-message" id="regError"></div>
-                <button class="btn btn-primary" id="registerBtn">Зарегистрироваться</button>
-                <div class="modal-link" id="showLoginLink">Уже есть аккаунт? Войти</div>
-            </div>
-            <div id="forgotForm" style="display: none;">
-                <input type="email" id="forgotEmail" placeholder="Ваш Email">
-                <div class="error-message" id="forgotError"></div>
-                <button class="btn btn-primary" id="forgotBtn">Восстановить пароль</button>
-                <div class="modal-link" id="showLoginFromForgot">Вернуться ко входу</div>
-            </div>
-        </div>
-    </div>
-
     <!-- Модалка админского входа -->
     <div class="modal" id="adminLoginModal">
         <div class="modal-box">
-            <h2>🔐 Вход администратора</h2>
+            <h2 style="color: white; margin-bottom: 20px;">🔐 Вход администратора</h2>
             <input type="text" id="adminLogin" placeholder="Логин" value="admin">
             <input type="password" id="adminPass" placeholder="Пароль" value="admin123">
-            <button class="btn btn-primary" id="adminLoginBtn">Войти</button>
+            <button class="btn btn-primary" id="adminLoginBtn" style="width: 100%;">Войти</button>
         </div>
     </div>
 
-<script>
-    (function() {
-        // ========== КОНФИГ ==========
-        const API_DATA = 'https://69b7f28dffbcd0286096b93a.mockapi.io/data';
-        const ADMIN_LOGIN = 'admin';
-        const ADMIN_PASS = 'admin123';
+    <script>
+        (function() {
+            // ========== КОНФИГ ==========
+            const API_DATA = 'https://69b7f28dffbcd0286096b93a.mockapi.io/data';
+            const ADMIN_LOGIN = 'admin';
+            const ADMIN_PASS = 'admin123';
 
-        // ========== СОСТОЯНИЕ ==========
-        let currentUser = null;
-        let currentTopic = null;
-        let currentQuestions = [];
-        let currentQuestionIndex = 0;
-        let selectedOption = null;
-        let isAdmin = false;
+            // ========== СОСТОЯНИЕ ==========
+            let currentUser = null;
+            let currentTopic = null;
+            let currentQuestions = [];
+            let currentQuestionIndex = 0;
+            let selectedOption = null;
+            let isAdmin = false;
 
-        // ========== ТЕМЫ ==========
-        const topics = [
-            { id: 1, name: '🧮 Математика', icon: '🧮', count: 30 },
-            { id: 2, name: '⚡ Физика', icon: '⚡', count: 30 },
-            { id: 3, name: '📜 История', icon: '📜', count: 30 },
-            { id: 4, name: '📚 Литература', icon: '📚', count: 30 },
-            { id: 5, name: '🌍 География', icon: '🌍', count: 30 },
-            { id: 6, name: '🧬 Биология', icon: '🧬', count: 30 }
-        ];
+            // ========== ТЕМЫ ==========
+            const topics = [
+                { id: 1, name: '🧮 Математика', icon: '🧮', count: 30 },
+                { id: 2, name: '⚡ Физика', icon: '⚡', count: 30 },
+                { id: 3, name: '📜 История', icon: '📜', count: 30 },
+                { id: 4, name: '📚 Литература', icon: '📚', count: 30 },
+                { id: 5, name: '🌍 География', icon: '🌍', count: 30 },
+                { id: 6, name: '🧬 Биология', icon: '🧬', count: 30 }
+            ];
 
-        // ========== ВОПРОСЫ ==========
-        const questionsDB = {
-            1: [ // Математика
-                { text: 'Сколько будет 2 + 2 × 2?', options: ['6', '8', '4'], correct: 1 },
-                { text: 'Какой корень из 144?', options: ['12', '14', '16'], correct: 1 },
-                { text: 'Число π примерно равно...', options: ['3.14', '3.41', '3.04'], correct: 1 },
-                { text: 'Сколько градусов в прямом угле?', options: ['90°', '180°', '360°'], correct: 1 },
-                { text: 'Что такое 5! (факториал)?', options: ['120', '60', '100'], correct: 1 },
-                { text: 'Сколько сторон у шестиугольника?', options: ['6', '8', '12'], correct: 1 },
-                { text: 'Римская цифра X — это...', options: ['10', '5', '100'], correct: 1 },
-                { text: 'Сколько миллиметров в метре?', options: ['1000', '100', '10'], correct: 1 },
-                { text: 'Как называется треугольник с тремя равными сторонами?', options: ['Равносторонний', 'Равнобедренный', 'Прямоугольный'], correct: 1 },
-                { text: 'Сколько будет 15 - 3 × 2?', options: ['9', '24', '12'], correct: 1 },
-                { text: 'Что больше: 0.5 или 1/3?', options: ['0.5', '1/3', 'Они равны'], correct: 1 },
-                { text: 'Квадратный корень из 169?', options: ['13', '14', '16'], correct: 1 },
-                { text: 'Сколько процентов составляет половина?', options: ['50%', '25%', '75%'], correct: 1 },
-                { text: 'Сумма углов треугольника?', options: ['180°', '360°', '270°'], correct: 1 },
-                { text: '2³ (2 в кубе) = ?', options: ['8', '6', '9'], correct: 1 },
-                { text: 'Какое число простое?', options: ['17', '15', '21'], correct: 1 },
-                { text: 'Сколько минут в часе?', options: ['60', '100', '120'], correct: 1 },
-                { text: 'Результат деления 0 на 5?', options: ['0', '5', 'Не определено'], correct: 1 },
-                { text: 'Что такое 10% от 200?', options: ['20', '10', '30'], correct: 1 },
-                { text: 'Периметр квадрата со стороной 5?', options: ['20', '25', '15'], correct: 1 },
-                { text: '2 + 2 × 3 - 1 = ?', options: ['7', '11', '9'], correct: 1 },
-                { text: 'Какое число следующее: 2, 4, 8, 16, ...?', options: ['32', '24', '48'], correct: 1 },
-                { text: 'Сколько нулей в миллионе?', options: ['6', '9', '12'], correct: 1 },
-                { text: '1 час 30 минут = ? минут', options: ['90', '100', '80'], correct: 1 },
-                { text: 'Что тяжелее: 1 кг ваты или 1 кг гвоздей?', options: ['Одинаково', 'Вата', 'Гвозди'], correct: 1 },
-                { text: 'Сколько сторон у куба?', options: ['6', '8', '12'], correct: 1 },
-                { text: '5² + 12² = ?', options: ['169', '144', '289'], correct: 1 },
-                { text: 'Какое число лишнее: 13, 17, 21, 23?', options: ['21', '13', '17'], correct: 1 },
-                { text: 'Сколько будет 99 + 1?', options: ['100', '101', '99'], correct: 1 },
-                { text: 'Половина от половины — это?', options: ['1/4', '1/2', '1'], correct: 1 }
-            ],
-            2: [ // Физика
-                { text: 'В чём измеряется сила тока?', options: ['Амперы', 'Вольты', 'Омы'], correct: 1 },
-                { text: 'Какой газ необходим для дыхания?', options: ['Кислород', 'Азот', 'Углекислый газ'], correct: 1 },
-                { text: 'Что тяжелее: 1 кг железа или 1 кг ваты?', options: ['Одинаково', 'Железо', 'Вата'], correct: 1 },
-                { text: 'Прибор для измерения напряжения?', options: ['Вольтметр', 'Амперметр', 'Омметр'], correct: 1 },
-                { text: 'Какая планета самая большая?', options: ['Юпитер', 'Сатурн', 'Нептун'], correct: 1 },
-                { text: 'Что такое сила тяжести?', options: ['Притяжение Земли', 'Электричество', 'Магнетизм'], correct: 1 },
-                { text: 'В чём измеряется энергия?', options: ['Джоули', 'Ватты', 'Ньютоны'], correct: 1 },
-                { text: 'Сколько цветов в радуге?', options: ['7', '6', '8'], correct: 1 },
-                { text: 'Что быстрее: свет или звук?', options: ['Свет', 'Звук', 'Одинаково'], correct: 1 },
-                { text: 'Температура кипения воды?', options: ['100°C', '90°C', '120°C'], correct: 1 },
-                { text: 'Какая планета ближе к Солнцу?', options: ['Меркурий', 'Венера', 'Земля'], correct: 1 },
-                { text: 'Из чего состоит вода?', options: ['H₂O', 'CO₂', 'O₂'], correct: 1 },
-                { text: 'Что измеряют в герцах?', options: ['Частоту', 'Силу', 'Энергию'], correct: 1 },
-                { text: 'Какой металл жидкий при комнатной температуре?', options: ['Ртуть', 'Свинец', 'Олово'], correct: 1 },
-                { text: 'Сколько костей в теле человека?', options: ['~206', '~300', '~150'], correct: 1 },
-                { text: 'Что такое инерция?', options: ['Сохранение скорости', 'Ускорение', 'Торможение'], correct: 1 },
-                { text: 'Какая частица имеет отрицательный заряд?', options: ['Электрон', 'Протон', 'Нейтрон'], correct: 1 },
-                { text: 'В чём измеряется давление?', options: ['Паскали', 'Ньютоны', 'Джоули'], correct: 1 },
-                { text: 'Что такое вакуум?', options: ['Отсутствие вещества', 'Пустота', 'Газ'], correct: 1 },
-                { text: 'Сколько планет в Солнечной системе?', options: ['8', '9', '7'], correct: 1 },
-                { text: 'Что такое конденсация?', options: ['Газ → жидкость', 'Жидкость → газ', 'Твёрдое → газ'], correct: 1 },
-                { text: 'Какой газ самый лёгкий?', options: ['Водород', 'Гелий', 'Кислород'], correct: 1 },
-                { text: 'Что изучает оптика?', options: ['Свет', 'Звук', 'Движение'], correct: 1 },
-                { text: 'В чём измеряется мощность?', options: ['Ватты', 'Джоули', 'Вольты'], correct: 1 },
-                { text: 'Что такое магнит?', options: ['Притягивает железо', 'Излучает свет', 'Греется'], correct: 1 },
-                { text: 'Какая наука изучает звёзды?', options: ['Астрономия', 'Физика', 'Химия'], correct: 1 },
-                { text: 'Что тяжелее: 1 л воды или 1 л масла?', options: ['Вода', 'Масло', 'Одинаково'], correct: 1 },
-                { text: 'Что такое звук?', options: ['Колебания воздуха', 'Свет', 'Электричество'], correct: 1 },
-                { text: 'Сколько миллисекунд в секунде?', options: ['1000', '100', '10'], correct: 1 },
-                { text: 'Какая планета самая холодная?', options: ['Уран', 'Нептун', 'Плутон'], correct: 1 }
-            ],
-            3: [ // История
-                { text: 'В каком году началась Вторая мировая война?', options: ['1939', '1941', '1914'], correct: 1 },
-                { text: 'Кто был первым президентом США?', options: ['Вашингтон', 'Линкольн', 'Джефферсон'], correct: 1 },
-                { text: 'В каком году полетел Юрий Гагарин?', options: ['1961', '1957', '1965'], correct: 1 },
-                { text: 'Кто написал "Войну и мир"?', options: ['Толстой', 'Достоевский', 'Чехов'], correct: 1 },
-                { text: 'Какая империя пала последней?', options: ['Османская', 'Римская', 'Монгольская'], correct: 1 },
-                { text: 'В каком году распался СССР?', options: ['1991', '1989', '1993'], correct: 1 },
-                { text: 'Кто открыл Америку?', options: ['Колумб', 'Магеллан', 'Васко да Гама'], correct: 1 },
-                { text: 'Какая цивилизация построила пирамиды?', options: ['Египет', 'Майя', 'Рим'], correct: 1 },
-                { text: 'В каком году была Куликовская битва?', options: ['1380', '1240', '1480'], correct: 1 },
-                { text: 'Кто изобрёл книгопечатание?', options: ['Гутенберг', 'Эдисон', 'Попов'], correct: 1 },
-                { text: 'Как звали первого князя на Руси?', options: ['Рюрик', 'Олег', 'Игорь'], correct: 1 },
-                { text: 'В каком году крестили Русь?', options: ['988', '1054', '1223'], correct: 1 },
-                { text: 'Кто написал "Капитанскую дочку"?', options: ['Пушкин', 'Лермонтов', 'Гоголь'], correct: 1 },
-                { text: 'Какая битва была в 1812 году?', options: ['Бородино', 'Полтава', 'Ледовое побоище'], correct: 1 },
-                { text: 'Кто был последним императором России?', options: ['Николай II', 'Александр III', 'Пётр I'], correct: 1 },
-                { text: 'В каком году отменили крепостное право?', options: ['1861', '1917', '1905'], correct: 1 },
-                { text: 'Кто написал "Евгения Онегина"?', options: ['Пушкин', 'Лермонтов', 'Тургенев'], correct: 1 },
-                { text: 'Какая страна была главной в Древнем мире?', options: ['Рим', 'Греция', 'Персия'], correct: 1 },
-                { text: 'Кто был учителем Александра Македонского?', options: ['Аристотель', 'Платон', 'Сократ'], correct: 1 },
-                { text: 'В каком году изобрели радио?', options: ['1895', '1900', '1885'], correct: 1 },
-                { text: 'Кто написал "Мёртвые души"?', options: ['Гоголь', 'Тургенев', 'Салтыков-Щедрин'], correct: 1 },
-                { text: 'Какая битва была в 1242 году?', options: ['Ледовое побоище', 'Куликовская', 'Невская'], correct: 1 },
-                { text: 'Кто изобрёл электричество?', options: ['Не изобретали, открыли', 'Эдисон', 'Тесла'], correct: 1 },
-                { text: 'В каком году основан Москва?', options: ['1147', '1237', '1328'], correct: 1 },
-                { text: 'Кто написал "Ревизора"?', options: ['Гоголь', 'Чехов', 'Островский'], correct: 1 },
-                { text: 'Какая война была в 1812 году?', options: ['Отечественная', 'Крымская', 'Семилетняя'], correct: 1 },
-                { text: 'Кто был прозван "Колумбом Вселенной"?', options: ['Гагарин', 'Армстронг', 'Титов'], correct: 1 },
-                { text: 'В каком году изобрели телефон?', options: ['1876', '1895', '1901'], correct: 1 },
-                { text: 'Кто написал "Тихий Дон"?', options: ['Шолохов', 'Булгаков', 'Пастернак'], correct: 1 },
-                { text: 'Какая столица Древней Руси?', options: ['Киев', 'Москва', 'Новгород'], correct: 1 }
-            ],
-            4: [ // Литература
-                { text: 'Кто написал "Преступление и наказание"?', options: ['Достоевский', 'Толстой', 'Чехов'], correct: 1 },
-                { text: 'Как звали няню Пушкина?', options: ['Арина Родионовна', 'Татьяна', 'Ольга'], correct: 1 },
-                { text: 'Кто написал "Муму"?', options: ['Тургенев', 'Некрасов', 'Гончаров'], correct: 1 },
-                { text: 'Главный герой "Героя нашего времени"?', options: ['Печорин', 'Онегин', 'Базаров'], correct: 1 },
-                { text: 'Кто написал "Войну и мир"?', options: ['Толстой', 'Достоевский', 'Чехов'], correct: 1 },
-                { text: 'Как звали главную героиню "Анны Карениной"?', options: ['Анна', 'Наташа', 'Катерина'], correct: 1 },
-                { text: 'Кто написал "Евгения Онегина"?', options: ['Пушкин', 'Лермонтов', 'Грибоедов'], correct: 1 },
-                { text: 'Что писал Чехов?', options: ['Рассказы и пьесы', 'Романы', 'Поэмы'], correct: 1 },
-                { text: 'Кто автор "Мёртвых душ"?', options: ['Гоголь', 'Салтыков-Щедрин', 'Тургенев'], correct: 1 },
-                { text: 'Где родился Пушкин?', options: ['Москва', 'Петербург', 'Михайловское'], correct: 1 },
-                { text: 'Кто написал "12 стульев"?', options: ['Ильф и Петров', 'Булгаков', 'Зощенко'], correct: 1 },
-                { text: 'Что такое ода?', options: ['Торжественное стихотворение', 'Сатира', 'Басня'], correct: 1 },
-                { text: 'Кто автор "Ревизора"?', options: ['Гоголь', 'Чехов', 'Островский'], correct: 1 },
-                { text: 'Кто написал "Грозу"?', options: ['Островский', 'Тургенев', 'Некрасов'], correct: 1 },
-                { text: 'Как звали Мцыри?', options: ['Мцыри — имя', 'Бэла', 'Демон'], correct: 1 },
-                { text: 'Кто написал "Отцы и дети"?', options: ['Тургенев', 'Гончаров', 'Писарев'], correct: 1 },
-                { text: 'Что такое басня?', options: ['Краткий стихотворный рассказ', 'Роман', 'Поэма'], correct: 1 },
-                { text: 'Кто автор "Демона"?', options: ['Лермонтов', 'Пушкин', 'Блок'], correct: 1 },
-                { text: 'Кто написал "Бесприданницу"?', options: ['Островский', 'Чехов', 'Горький'], correct: 1 },
-                { text: 'Кто написал "Тихий Дон"?', options: ['Шолохов', 'Булгаков', 'Пастернак'], correct: 1 },
-                { text: 'Главный герой "Обломова"?', options: ['Илья Ильич', 'Андрей', 'Пётр'], correct: 1 },
-                { text: 'Кто автор "Вишнёвого сада"?', options: ['Чехов', 'Горький', 'Толстой'], correct: 1 },
-                { text: 'Кто написал "Собачье сердце"?', options: ['Булгаков', 'Замятин', 'Платонов'], correct: 1 },
-                { text: 'Что такое антитеза?', options: ['Противопоставление', 'Повторение', 'Сравнение'], correct: 1 },
-                { text: 'Кто автор "Анны Карениной"?', options: ['Толстой', 'Достоевский', 'Тургенев'], correct: 1 },
-                { text: 'Где происходит действие "Грозы"?', options: ['Калинов', 'Москва', 'Петербург'], correct: 1 },
-                { text: 'Кто написал "Бесы"?', options: ['Достоевский', 'Тургенев', 'Гончаров'], correct: 1 },
-                { text: 'Что такое эпитет?', options: ['Образное определение', 'Повтор', 'Сравнение'], correct: 1 },
-                { text: 'Кто автор "Капитанской дочки"?', options: ['Пушкин', 'Лермонтов', 'Гоголь'], correct: 1 },
-                { text: 'Кто написал "На дне"?', options: ['Горький', 'Чехов', 'Андреев'], correct: 1 }
-            ],
-            5: [ // География
-                { text: 'Самая длинная река в мире?', options: ['Амазонка', 'Нил', 'Миссисипи'], correct: 1 },
-                { text: 'Самая высокая гора?', options: ['Эверест', 'Эльбрус', 'Монблан'], correct: 1 },
-                { text: 'Сколько океанов на Земле?', options: ['5', '4', '6'], correct: 1 },
-                { text: 'Самый большой океан?', options: ['Тихий', 'Атлантический', 'Индийский'], correct: 1 },
-                { text: 'Столица Франции?', options: ['Париж', 'Лондон', 'Берлин'], correct: 1 },
-                { text: 'Самая маленькая страна?', options: ['Ватикан', 'Монако', 'Сан-Марино'], correct: 1 },
-                { text: 'Какой континент самый большой?', options: ['Азия', 'Африка', 'Америка'], correct: 1 },
-                { text: 'Какая пустыня самая большая?', options: ['Сахара', 'Гоби', 'Калахари'], correct: 1 },
-                { text: 'Столица Италии?', options: ['Рим', 'Милан', 'Неаполь'], correct: 1 },
-                { text: 'Самое глубокое озеро?', options: ['Байкал', 'Танганьика', 'Виктория'], correct: 1 },
-                { text: 'Столица Японии?', options: ['Токио', 'Киото', 'Осака'], correct: 1 },
-                { text: 'Сколько материков?', options: ['6', '5', '7'], correct: 1 },
-                { text: 'Самая большая страна по площади?', options: ['Россия', 'Канада', 'Китай'], correct: 1 },
-                { text: 'Где находится Статуя Свободы?', options: ['Нью-Йорк', 'Вашингтон', 'Лос-Анджелес'], correct: 1 },
-                { text: 'Какая река протекает в Египте?', options: ['Нил', 'Амазонка', 'Миссисипи'], correct: 1 },
-                { text: 'Столица Великобритании?', options: ['Лондон', 'Манчестер', 'Бирмингем'], correct: 1 },
-                { text: 'Самый холодный материк?', options: ['Антарктида', 'Арктика', 'Северная Америка'], correct: 1 },
-                { text: 'Где находятся пирамиды?', options: ['Египет', 'Мексика', 'Китай'], correct: 1 },
-                { text: 'Самая высокая гора в России?', options: ['Эльбрус', 'Белуха', 'Казбек'], correct: 1 },
-                { text: 'Какое озеро самое большое по площади?', options: ['Каспийское море', 'Байкал', 'Виктория'], correct: 1 },
-                { text: 'Столица Германии?', options: ['Берлин', 'Мюнхен', 'Гамбург'], correct: 1 },
-                { text: 'Где находится Великая Китайская стена?', options: ['Китай', 'Япония', 'Монголия'], correct: 1 },
-                { text: 'Сколько частей света?', options: ['6', '5', '7'], correct: 1 },
-                { text: 'Самая длинная река в Европе?', options: ['Волга', 'Дунай', 'Рейн'], correct: 1 },
-                { text: 'Столица Испании?', options: ['Мадрид', 'Барселона', 'Валенсия'], correct: 1 },
-                { text: 'Где находится Колизей?', options: ['Рим', 'Афины', 'Париж'], correct: 1 },
-                { text: 'Какая страна имеет форму сапога?', options: ['Италия', 'Греция', 'Испания'], correct: 1 },
-                { text: 'Самый большой остров?', options: ['Гренландия', 'Новая Гвинея', 'Калимантан'], correct: 1 },
-                { text: 'Столица Китая?', options: ['Пекин', 'Шанхай', 'Гонконг'], correct: 1 },
-                { text: 'Где находится Тадж-Махал?', options: ['Индия', 'Пакистан', 'Иран'], correct: 1 }
-            ],
-            6: [ // Биология
-                { text: 'Сколько камер в сердце человека?', options: ['4', '3', '2'], correct: 1 },
-                { text: 'Какая наука изучает растения?', options: ['Ботаника', 'Зоология', 'Анатомия'], correct: 1 },
-                { text: 'Какой орган отвечает за зрение?', options: ['Глаза', 'Уши', 'Нос'], correct: 1 },
-                { text: 'Сколько хромосом у человека?', options: ['46', '48', '44'], correct: 1 },
-                { text: 'Какое животное самое быстрое?', options: ['Гепард', 'Лев', 'Антилопа'], correct: 1 },
-                { text: 'Что такое фотосинтез?', options: ['Питание растений', 'Дыхание', 'Размножение'], correct: 1 },
-                { text: 'Самый большой орган человека?', options: ['Кожа', 'Печень', 'Кишечник'], correct: 1 },
-                { text: 'Сколько зубов у взрослого человека?', options: ['32', '30', '28'], correct: 1 },
-                { text: 'Какая кровь самая редкая?', options: ['Четвертая отрицательная', 'Первая', 'Вторая'], correct: 1 },
-                { text: 'Сколько лет живут слоны?', options: ['~70', '~50', '~90'], correct: 1 },
-                { text: 'Какая птица не летает?', options: ['Пингвин', 'Страус', 'Обе'], correct: 3 },
-                { text: 'Что изучает микология?', options: ['Грибы', 'Бактерии', 'Водоросли'], correct: 1 },
-                { text: 'Какое животное самое высокое?', options: ['Жираф', 'Слон', 'Верблюд'], correct: 1 },
-                { text: 'Сколько костей у новорождённого?', options: ['~300', '~206', '~250'], correct: 1 },
-                { text: 'Какая железа отвечает за рост?', options: ['Гипофиз', 'Щитовидка', 'Надпочечники'], correct: 1 },
-                { text: 'Что такое ДНК?', options: ['Носитель генов', 'Белок', 'Витамин'], correct: 1 },
-                { text: 'Какое животное живёт дольше всех?', options: ['Черепаха', 'Слон', 'Кит'], correct: 1 },
-                { text: 'Сколько отделов в позвоночнике?', options: ['5', '4', '6'], correct: 1 },
-                { text: 'Что такое эволюция?', options: ['Развитие организмов', 'Вымирание', 'Мутация'], correct: 1 },
-                { text: 'Какая наука изучает насекомых?', options: ['Энтомология', 'Орнитология', 'Ихтиология'], correct: 1 },
-                { text: 'Сколько пар рёбер у человека?', options: ['12', '10', '14'], correct: 1 },
-                { text: 'Какой витамин вырабатывается на солнце?', options: ['D', 'C', 'A'], correct: 1 },
-                { text: 'Что такое метаболизм?', options: ['Обмен веществ', 'Дыхание', 'Кровообращение'], correct: 1 },
-                { text: 'Самая маленькая кость в теле?', options: ['Стремечко', 'Молоточек', 'Наковальня'], correct: 1 },
-                { text: 'Сколько литров крови в человеке?', options: ['~5', '~3', '~7'], correct: 1 },
-                { text: 'Какое животное не пьёт воду?', options: ['Коала', 'Верблюд', 'Кенгуру'], correct: 1 },
-                { text: 'Что такое иммунитет?', options: ['Защита организма', 'Болезнь', 'Лекарство'], correct: 1 },
-                { text: 'Какой орган очищает кровь?', options: ['Печень', 'Сердце', 'Легкие'], correct: 1 },
-                { text: 'Сколько мышц в теле человека?', options: ['~600', '~400', '~800'], correct: 1 },
-                { text: 'Что такое хлорофилл?', options: ['Зелёный пигмент', 'Красный пигмент', 'Белок'], correct: 1 }
-            ]
-        };
+            // ========== ВОПРОСЫ ==========
+            const questionsDB = {
+                1: [ // Математика
+                    { text: 'Сколько будет 2 + 2 × 2?', options: ['6', '8', '4'], correct: 1 },
+                    { text: 'Какой корень из 144?', options: ['12', '14', '16'], correct: 1 },
+                    { text: 'Число π примерно равно...', options: ['3.14', '3.41', '3.04'], correct: 1 },
+                    { text: 'Сколько градусов в прямом угле?', options: ['90°', '180°', '360°'], correct: 1 },
+                    { text: 'Что такое 5! (факториал)?', options: ['120', '60', '100'], correct: 1 },
+                    { text: 'Сколько сторон у шестиугольника?', options: ['6', '8', '12'], correct: 1 },
+                    { text: 'Римская цифра X — это...', options: ['10', '5', '100'], correct: 1 },
+                    { text: 'Сколько миллиметров в метре?', options: ['1000', '100', '10'], correct: 1 },
+                    { text: 'Как называется треугольник с тремя равными сторонами?', options: ['Равносторонний', 'Равнобедренный', 'Прямоугольный'], correct: 1 },
+                    { text: 'Сколько будет 15 - 3 × 2?', options: ['9', '24', '12'], correct: 1 }
+                ],
+                2: [ // Физика
+                    { text: 'В чём измеряется сила тока?', options: ['Амперы', 'Вольты', 'Омы'], correct: 1 },
+                    { text: 'Какой газ необходим для дыхания?', options: ['Кислород', 'Азот', 'Углекислый газ'], correct: 1 },
+                    { text: 'Что тяжелее: 1 кг железа или 1 кг ваты?', options: ['Одинаково', 'Железо', 'Вата'], correct: 1 },
+                    { text: 'Прибор для измерения напряжения?', options: ['Вольтметр', 'Амперметр', 'Омметр'], correct: 1 },
+                    { text: 'Какая планета самая большая?', options: ['Юпитер', 'Сатурн', 'Нептун'], correct: 1 },
+                    { text: 'Что такое сила тяжести?', options: ['Притяжение Земли', 'Электричество', 'Магнетизм'], correct: 1 },
+                    { text: 'В чём измеряется энергия?', options: ['Джоули', 'Ватты', 'Ньютоны'], correct: 1 },
+                    { text: 'Сколько цветов в радуге?', options: ['7', '6', '8'], correct: 1 },
+                    { text: 'Что быстрее: свет или звук?', options: ['Свет', 'Звук', 'Одинаково'], correct: 1 },
+                    { text: 'Температура кипения воды?', options: ['100°C', '90°C', '120°C'], correct: 1 }
+                ],
+                3: [ // История
+                    { text: 'В каком году началась Вторая мировая война?', options: ['1939', '1941', '1914'], correct: 1 },
+                    { text: 'Кто был первым президентом США?', options: ['Вашингтон', 'Линкольн', 'Джефферсон'], correct: 1 },
+                    { text: 'В каком году полетел Юрий Гагарин?', options: ['1961', '1957', '1965'], correct: 1 },
+                    { text: 'Кто написал "Войну и мир"?', options: ['Толстой', 'Достоевский', 'Чехов'], correct: 1 },
+                    { text: 'Какая империя пала последней?', options: ['Османская', 'Римская', 'Монгольская'], correct: 1 },
+                    { text: 'В каком году распался СССР?', options: ['1991', '1989', '1993'], correct: 1 },
+                    { text: 'Кто открыл Америку?', options: ['Колумб', 'Магеллан', 'Васко да Гама'], correct: 1 },
+                    { text: 'Какая цивилизация построила пирамиды?', options: ['Египет', 'Майя', 'Рим'], correct: 1 },
+                    { text: 'В каком году была Куликовская битва?', options: ['1380', '1240', '1480'], correct: 1 },
+                    { text: 'Кто изобрёл книгопечатание?', options: ['Гутенберг', 'Эдисон', 'Попов'], correct: 1 }
+                ],
+                4: [ // Литература
+                    { text: 'Кто написал "Преступление и наказание"?', options: ['Достоевский', 'Толстой', 'Чехов'], correct: 1 },
+                    { text: 'Как звали няню Пушкина?', options: ['Арина Родионовна', 'Татьяна', 'Ольга'], correct: 1 },
+                    { text: 'Кто написал "Муму"?', options: ['Тургенев', 'Некрасов', 'Гончаров'], correct: 1 },
+                    { text: 'Главный герой "Героя нашего времени"?', options: ['Печорин', 'Онегин', 'Базаров'], correct: 1 },
+                    { text: 'Кто написал "Войну и мир"?', options: ['Толстой', 'Достоевский', 'Чехов'], correct: 1 },
+                    { text: 'Как звали главную героиню "Анны Карениной"?', options: ['Анна', 'Наташа', 'Катерина'], correct: 1 },
+                    { text: 'Кто написал "Евгения Онегина"?', options: ['Пушкин', 'Лермонтов', 'Грибоедов'], correct: 1 },
+                    { text: 'Что писал Чехов?', options: ['Рассказы и пьесы', 'Романы', 'Поэмы'], correct: 1 },
+                    { text: 'Кто автор "Мёртвых душ"?', options: ['Гоголь', 'Салтыков-Щедрин', 'Тургенев'], correct: 1 },
+                    { text: 'Где родился Пушкин?', options: ['Москва', 'Петербург', 'Михайловское'], correct: 1 }
+                ],
+                5: [ // География
+                    { text: 'Самая длинная река в мире?', options: ['Амазонка', 'Нил', 'Миссисипи'], correct: 1 },
+                    { text: 'Самая высокая гора?', options: ['Эверест', 'Эльбрус', 'Монблан'], correct: 1 },
+                    { text: 'Сколько океанов на Земле?', options: ['5', '4', '6'], correct: 1 },
+                    { text: 'Самый большой океан?', options: ['Тихий', 'Атлантический', 'Индийский'], correct: 1 },
+                    { text: 'Столица Франции?', options: ['Париж', 'Лондон', 'Берлин'], correct: 1 },
+                    { text: 'Самая маленькая страна?', options: ['Ватикан', 'Монако', 'Сан-Марино'], correct: 1 },
+                    { text: 'Какой континент самый большой?', options: ['Азия', 'Африка', 'Америка'], correct: 1 },
+                    { text: 'Какая пустыня самая большая?', options: ['Сахара', 'Гоби', 'Калахари'], correct: 1 },
+                    { text: 'Столица Италии?', options: ['Рим', 'Милан', 'Неаполь'], correct: 1 },
+                    { text: 'Самое глубокое озеро?', options: ['Байкал', 'Танганьика', 'Виктория'], correct: 1 }
+                ],
+                6: [ // Биология
+                    { text: 'Сколько камер в сердце человека?', options: ['4', '3', '2'], correct: 1 },
+                    { text: 'Какая наука изучает растения?', options: ['Ботаника', 'Зоология', 'Анатомия'], correct: 1 },
+                    { text: 'Какой орган отвечает за зрение?', options: ['Глаза', 'Уши', 'Нос'], correct: 1 },
+                    { text: 'Сколько хромосом у человека?', options: ['46', '48', '44'], correct: 1 },
+                    { text: 'Какое животное самое быстрое?', options: ['Гепард', 'Лев', 'Антилопа'], correct: 1 },
+                    { text: 'Что такое фотосинтез?', options: ['Питание растений', 'Дыхание', 'Размножение'], correct: 1 },
+                    { text: 'Самый большой орган человека?', options: ['Кожа', 'Печень', 'Кишечник'], correct: 1 },
+                    { text: 'Сколько зубов у взрослого человека?', options: ['32', '30', '28'], correct: 1 },
+                    { text: 'Какая кровь самая редкая?', options: ['Четвертая отрицательная', 'Первая', 'Вторая'], correct: 1 },
+                    { text: 'Сколько лет живут слоны?', options: ['~70', '~50', '~90'], correct: 1 }
+                ]
+            };
 
-        // ========== API ФУНКЦИИ ==========
-        async function loadUsers() {
-            try {
-                const res = await fetch(`${API_DATA}?type=user`);
-                return await res.json();
-            } catch(e) {
-                console.error('Ошибка загрузки пользователей:', e);
-                return [];
+            // ========== API ФУНКЦИИ ==========
+            async function loadUsers() {
+                try {
+                    const res = await fetch(`${API_DATA}?type=user`);
+                    return await res.json();
+                } catch(e) {
+                    return [];
+                }
             }
-        }
 
-        async function loadAnswers() {
-            try {
-                const res = await fetch(`${API_DATA}?type=answer`);
-                return await res.json();
-            } catch(e) {
-                console.error('Ошибка загрузки ответов:', e);
-                return [];
+            async function loadAnswers() {
+                try {
+                    const res = await fetch(`${API_DATA}?type=answer`);
+                    return await res.json();
+                } catch(e) {
+                    return [];
+                }
             }
-        }
 
-        async function saveUser(user) {
-            try {
+            async function saveUser(user) {
                 const res = await fetch(API_DATA, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(user)
                 });
                 return await res.json();
-            } catch(e) {
-                console.error('Ошибка сохранения пользователя:', e);
-                return null;
             }
-        }
 
-        async function updateUser(userId, data) {
-            try {
+            async function updateUser(userId, data) {
                 await fetch(`${API_DATA}/${userId}`, {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(data)
                 });
-            } catch(e) {
-                console.error('Ошибка обновления пользователя:', e);
             }
-        }
 
-        async function saveAnswer(answer) {
-            try {
+            async function saveAnswer(answer) {
                 await fetch(API_DATA, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(answer)
                 });
-            } catch(e) {
-                console.error('Ошибка сохранения ответа:', e);
-            }
-        }
-
-        // ========== АВТОРИЗАЦИЯ ==========
-        const authModal = document.getElementById('authModal');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const forgotForm = document.getElementById('forgotForm');
-
-        document.getElementById('showLoginBtn').addEventListener('click', () => {
-            authModal.classList.add('active');
-            showLoginForm();
-        });
-
-        document.getElementById('showRegisterLink').addEventListener('click', () => {
-            showRegisterForm();
-        });
-
-        document.getElementById('showLoginLink').addEventListener('click', () => {
-            showLoginForm();
-        });
-
-        document.getElementById('showForgotLink').addEventListener('click', () => {
-            showForgotForm();
-        });
-
-        document.getElementById('showLoginFromForgot').addEventListener('click', () => {
-            showLoginForm();
-        });
-
-        function showLoginForm() {
-            document.getElementById('authModalTitle').textContent = '🔐 Вход';
-            loginForm.style.display = 'block';
-            registerForm.style.display = 'none';
-            forgotForm.style.display = 'none';
-        }
-
-        function showRegisterForm() {
-            document.getElementById('authModalTitle').textContent = '📝 Регистрация';
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'block';
-            forgotForm.style.display = 'none';
-        }
-
-        function showForgotForm() {
-            document.getElementById('authModalTitle').textContent = '📧 Восстановление пароля';
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'none';
-            forgotForm.style.display = 'block';
-        }
-
-        // Регистрация
-        document.getElementById('registerBtn').addEventListener('click', async () => {
-            const username = document.getElementById('regUsername').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const password2 = document.getElementById('regPassword2').value;
-
-            if(!username || !email || !password) {
-                document.getElementById('regError').textContent = 'Заполни все поля';
-                document.getElementById('regError').style.display = 'block';
-                return;
             }
 
-            if(password !== password2) {
-                document.getElementById('regError').textContent = 'Пароли не совпадают';
-                document.getElementById('regError').style.display = 'block';
-                return;
-            }
+            // ========== ВХОД ПО НИКУ ==========
+            document.getElementById('setNickBtn').addEventListener('click', async () => {
+                const nickname = document.getElementById('nickInput').value.trim();
+                if(!nickname) return alert('Введи ник');
 
-            const users = await loadUsers();
-            if(users.find(u => u.username === username)) {
-                document.getElementById('regError').textContent = 'Логин уже занят';
-                document.getElementById('regError').style.display = 'block';
-                return;
-            }
+                const users = await loadUsers();
+                let user = users.find(u => u.username === nickname);
 
-            const newUser = {
-                type: 'user',
-                username: username,
-                email: email,
-                password: password,
-                score: 0,
-                gamesPlayed: 0,
-                registered: new Date().toISOString()
-            };
+                if(!user) {
+                    const newUser = {
+                        type: 'user',
+                        username: nickname,
+                        score: 0,
+                        gamesPlayed: 0,
+                        registered: new Date().toISOString()
+                    };
+                    user = await saveUser(newUser);
+                }
 
-            const savedUser = await saveUser(newUser);
-            if(savedUser) {
-                currentUser = savedUser;
-                authModal.classList.remove('active');
-                updateProfile();
-                
-                // Сохраняем в localStorage для автовхода
-                localStorage.setItem('currentUser', JSON.stringify(savedUser));
-            }
-        });
-
-        // Вход
-        document.getElementById('loginBtn').addEventListener('click', async () => {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            const users = await loadUsers();
-            const user = users.find(u => u.username === username && u.password === password);
-
-            if(user) {
                 currentUser = user;
-                authModal.classList.remove('active');
-                updateProfile();
-                
-                // Сохраняем в localStorage
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                // Очищаем поля ввода
-                document.getElementById('loginUsername').value = '';
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('loginError').style.display = 'none';
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        });
-
-        // Выход
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            currentUser = null;
-            document.getElementById('profileArea').style.display = 'none';
-            document.getElementById('quizArea').style.display = 'none';
-            localStorage.removeItem('currentUser');
-        });
-
-        function updateProfile() {
-            if(currentUser) {
                 document.getElementById('profileArea').style.display = 'block';
-                document.getElementById('profileUsername').textContent = currentUser.username;
-                document.getElementById('profileEmail').textContent = currentUser.email || '';
-                document.getElementById('profileScore').textContent = currentUser.score || 0;
+                document.getElementById('profileUsername').textContent = user.username;
+                document.getElementById('profileScore').textContent = user.score || 0;
                 
-                // Считаем пройденные темы (уникальные topicId в ответах)
-                loadAnswers().then(answers => {
-                    const userAnswers = answers.filter(a => a.userId === currentUser.id);
-                    const uniqueTopics = new Set(userAnswers.map(a => a.topicId));
-                    document.getElementById('profileGames').textContent = uniqueTopics.size;
+                // Обновляем рейтинг сразу
+                updateRating();
+            });
+
+            // ========== РЕЙТИНГ ==========
+            async function updateRating() {
+                const users = await loadUsers();
+                const sorted = [...users].sort((a,b) => (b.score || 0) - (a.score || 0));
+                let html = '<tr><th>Игрок</th><th>Очки</th></tr>';
+                sorted.forEach(u => {
+                    html += `<tr><td>${u.username}</td><td>${u.score || 0}</td></tr>`;
                 });
-            }
-        }
-
-        // Проверяем сохранённую сессию при загрузке
-        (async function checkSavedSession() {
-            const savedUser = localStorage.getItem('currentUser');
-            if(savedUser) {
-                try {
-                    const userData = JSON.parse(savedUser);
-                    // Проверяем, что пользователь всё ещё существует в БД
-                    const users = await loadUsers();
-                    const exists = users.find(u => u.id === userData.id);
-                    if(exists) {
-                        currentUser = exists;
-                        updateProfile();
-                    } else {
-                        localStorage.removeItem('currentUser');
-                    }
-                } catch(e) {
-                    localStorage.removeItem('currentUser');
-                }
-            }
-        })();
-
-        // ========== ТЕМЫ ==========
-        function renderTopics() {
-            const grid = document.getElementById('topicsGrid');
-            grid.innerHTML = topics.map(t => `
-                <div class="topic-card" data-id="${t.id}">
-                    <div class="topic-icon">${t.icon}</div>
-                    <div class="topic-name">${t.name}</div>
-                    <div class="topic-count">${t.count} вопросов</div>
-                </div>
-            `).join('');
-
-            document.querySelectorAll('.topic-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    if(!currentUser) {
-                        alert('Сначала войди или зарегистрируйся');
-                        return;
-                    }
-                    document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected');
-                    const id = parseInt(card.dataset.id);
-                    currentTopic = topics.find(t => t.id === id);
-                    currentQuestions = questionsDB[id] || [];
-                    currentQuestionIndex = 0;
-                    if(currentQuestions.length > 0) {
-                        showQuestion();
-                        document.getElementById('quizArea').style.display = 'block';
-                    }
-                });
-            });
-        }
-
-        function showQuestion() {
-            const q = currentQuestions[currentQuestionIndex];
-            document.getElementById('questionText').innerText = q.text;
-            let html = '';
-            q.options.forEach((opt, idx) => {
-                html += `<button class="option-btn" data-opt="${idx+1}">${opt}</button>`;
-            });
-            document.getElementById('optionsContainer').innerHTML = html;
-            selectedOption = null;
-            document.querySelectorAll('.option-btn').forEach(btn => {
-                btn.classList.remove('selected', 'correct', 'wrong');
-                btn.addEventListener('click', (e) => {
-                    if(selectedOption) return;
-                    const opt = parseInt(btn.dataset.opt);
-                    selectedOption = opt;
-                    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    checkAnswer(q, opt);
-                });
-            });
-        }
-
-        async function checkAnswer(q, selected) {
-            const correct = (selected === q.correct);
-            document.querySelectorAll('.option-btn').forEach(btn => {
-                if(btn.dataset.opt == q.correct) btn.classList.add('correct');
-                else if(btn.dataset.opt == selected && !correct) btn.classList.add('wrong');
-            });
-
-            if(currentUser) {
-                const answer = {
-                    type: 'answer',
-                    userId: currentUser.id,
-                    username: currentUser.username,
-                    topicId: currentTopic.id,
-                    questionText: q.text,
-                    correct: correct,
-                    points: correct ? 10 : 0,
-                    timestamp: new Date().toISOString()
-                };
-                await saveAnswer(answer);
-                
-                if(correct) {
-                    currentUser.score = (currentUser.score || 0) + 10;
-                    await updateUser(currentUser.id, currentUser);
-                    document.getElementById('profileScore').textContent = currentUser.score;
-                    
-                    // Обновляем localStorage
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                }
+                document.getElementById('ratingTable').innerHTML = html;
             }
 
-            setTimeout(() => {
-                if(currentQuestionIndex < currentQuestions.length - 1) {
-                    currentQuestionIndex++;
-                    showQuestion();
-                } else {
-                    alert('Тема пройдена! Твой счёт: ' + (currentUser?.score || 0));
-                    document.getElementById('quizArea').style.display = 'none';
-                }
-            }, 1500);
-        }
-
-        // ========== РЕЙТИНГ ==========
-        document.getElementById('showRatingBtn').addEventListener('click', async () => {
-            const users = await loadUsers();
-            const sorted = [...users].sort((a,b) => (b.score || 0) - (a.score || 0));
-            let html = '<tr><th>Игрок</th><th>Очки</th></tr>';
-            sorted.forEach(u => {
-                html += `<tr><td>${u.username}</td><td>${u.score || 0}</td></tr>`;
+            document.getElementById('showRatingBtn').addEventListener('click', async () => {
+                await updateRating();
+                document.getElementById('ratingArea').style.display = 'block';
             });
-            document.getElementById('ratingTable').innerHTML = html;
-            document.getElementById('ratingArea').style.display = 'block';
-        });
 
-        // ========== АДМИНКА ==========
-        let clickCount = 0;
-        document.getElementById('logo').addEventListener('click', () => {
-            clickCount++;
-            if(clickCount >= 5) {
-                document.getElementById('adminLoginModal').classList.add('active');
-                clickCount = 0;
-            }
-            setTimeout(() => clickCount = 0, 3000);
-        });
+            // ========== ТЕМЫ ==========
+            function renderTopics() {
+                const grid = document.getElementById('topicsGrid');
+                grid.innerHTML = topics.map(t => `
+                    <div class="topic-card" data-id="${t.id}">
+                        <div class="topic-icon">${t.icon}</div>
+                        <div class="topic-name">${t.name}</div>
+                        <div class="topic-count">${t.count} вопросов</div>
+                    </div>
+                `).join('');
 
-        document.getElementById('adminLoginBtn').addEventListener('click', () => {
-            const login = document.getElementById('adminLogin').value;
-            const pass = document.getElementById('adminPass').value;
-            if(login === ADMIN_LOGIN && pass === ADMIN_PASS) {
-                document.getElementById('adminLoginModal').classList.remove('active');
-                document.getElementById('adminArea').style.display = 'block';
-                showAdminUsers();
-            } else {
-                alert('Неверный логин/пароль');
-            }
-        });
-
-        async function showAdminUsers() {
-            const users = await loadUsers();
-            let html = '<table class="admin-table"><tr><th>ID</th><th>Логин</th><th>Email</th><th>Очки</th><th>Дата</th></tr>';
-            users.forEach(u => {
-                html += `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.email || '-'}</td><td>${u.score || 0}</td><td>${new Date(u.registered).toLocaleString() || ''}</td></tr>`;
-            });
-            html += '</table>';
-            document.getElementById('adminContent').innerHTML = html;
-        }
-
-        document.querySelectorAll('.admin-tab').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                if(e.target.dataset.tab === 'users') {
-                    await showAdminUsers();
-                } else if(e.target.dataset.tab === 'answers') {
-                    const answers = await loadAnswers();
-                    let html = '<table class="admin-table"><tr><th>Игрок</th><th>Вопрос</th><th>Верно</th><th>Очки</th><th>Время</th></tr>';
-                    answers.forEach(a => {
-                        html += `<tr><td>${a.username}</td><td>${a.questionText?.substring(0,30)}...</td><td>${a.correct ? '✅' : '❌'}</td><td>${a.points}</td><td>${new Date(a.timestamp).toLocaleString()}</td></tr>`;
+                document.querySelectorAll('.topic-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        if(!currentUser) {
+                            alert('Сначала введи ник и нажми "Играть"');
+                            return;
+                        }
+                        document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+                        card.classList.add('selected');
+                        const id = parseInt(card.dataset.id);
+                        currentTopic = topics.find(t => t.id === id);
+                        currentQuestions = questionsDB[id] || [];
+                        currentQuestionIndex = 0;
+                        if(currentQuestions.length > 0) {
+                            showQuestion();
+                            document.getElementById('quizArea').style.display = 'block';
+                        }
                     });
-                    html += '</table>';
-                    document.getElementById('adminContent').innerHTML = html;
+                });
+            }
+
+            function showQuestion() {
+                const q = currentQuestions[currentQuestionIndex];
+                document.getElementById('questionText').innerText = q.text;
+                let html = '';
+                q.options.forEach((opt, idx) => {
+                    html += `<button class="option-btn" data-opt="${idx+1}">${opt}</button>`;
+                });
+                document.getElementById('optionsContainer').innerHTML = html;
+                selectedOption = null;
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('selected', 'correct', 'wrong');
+                    btn.addEventListener('click', (e) => {
+                        if(selectedOption) return;
+                        const opt = parseInt(btn.dataset.opt);
+                        selectedOption = opt;
+                        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        checkAnswer(q, opt);
+                    });
+                });
+            }
+
+            async function checkAnswer(q, selected) {
+                const correct = (selected === q.correct);
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    if(btn.dataset.opt == q.correct) btn.classList.add('correct');
+                    else if(btn.dataset.opt == selected && !correct) btn.classList.add('wrong');
+                });
+
+                if(currentUser) {
+                    const answer = {
+                        type: 'answer',
+                        userId: currentUser.id,
+                        username: currentUser.username,
+                        topicId: currentTopic.id,
+                        questionText: q.text,
+                        correct: correct,
+                        points: correct ? 10 : 0,
+                        timestamp: new Date().toISOString()
+                    };
+                    await saveAnswer(answer);
+                    
+                    if(correct) {
+                        currentUser.score = (currentUser.score || 0) + 10;
+                        await updateUser(currentUser.id, currentUser);
+                        document.getElementById('profileScore').textContent = currentUser.score;
+                        
+                        // Обновляем рейтинг после каждого ответа
+                        await updateRating();
+                    }
+                }
+
+                setTimeout(() => {
+                    if(currentQuestionIndex < currentQuestions.length - 1) {
+                        currentQuestionIndex++;
+                        showQuestion();
+                    } else {
+                        alert('Тема пройдена! Твой счёт: ' + (currentUser?.score || 0));
+                        document.getElementById('quizArea').style.display = 'none';
+                    }
+                }, 1500);
+            }
+
+            // ========== АДМИНКА ==========
+            let clickCount = 0;
+            document.getElementById('logo').addEventListener('click', () => {
+                clickCount++;
+                if(clickCount >= 5) {
+                    document.getElementById('adminLoginModal').classList.add('active');
+                    clickCount = 0;
+                }
+                setTimeout(() => clickCount = 0, 3000);
+            });
+
+            document.getElementById('adminLoginBtn').addEventListener('click', () => {
+                const login = document.getElementById('adminLogin').value;
+                const pass = document.getElementById('adminPass').value;
+                if(login === ADMIN_LOGIN && pass === ADMIN_PASS) {
+                    document.getElementById('adminLoginModal').classList.remove('active');
+                    document.getElementById('adminArea').style.display = 'block';
+                    showAdminUsers();
+                } else {
+                    alert('Неверный логин/пароль');
                 }
             });
-        });
 
-        document.getElementById('closeAdminBtn').addEventListener('click', () => {
-            document.getElementById('adminArea').style.display = 'none';
-        });
+            async function showAdminUsers() {
+                const users = await loadUsers();
+                let html = '<table class="admin-table"><tr><th>ID</th><th>Логин</th><th>Очки</th><th>Дата</th></tr>';
+                users.forEach(u => {
+                    html += `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.score || 0}</td><td>${new Date(u.registered).toLocaleString() || ''}</td></tr>`;
+                });
+                html += '</table>';
+                document.getElementById('adminContent').innerHTML = html;
+            }
 
-        // Закрытие модалок по клику вне
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if(e.target === modal) {
-                    modal.classList.remove('active');
-                }
+            document.querySelectorAll('.admin-tab').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    if(e.target.dataset.tab === 'users') {
+                        await showAdminUsers();
+                    } else if(e.target.dataset.tab === 'answers') {
+                        const answers = await loadAnswers();
+                        let html = '<table class="admin-table"><tr><th>Игрок</th><th>Вопрос</th><th>Верно</th><th>Очки</th></tr>';
+                        answers.forEach(a => {
+                            html += `<tr><td>${a.username}</td><td>${a.questionText?.substring(0,30)}...</td><td>${a.correct ? '✅' : '❌'}</td><td>${a.points}</td></tr>`;
+                        });
+                        html += '</table>';
+                        document.getElementById('adminContent').innerHTML = html;
+                    }
+                });
             });
-        });
 
-        // ========== СТАРТ ==========
-        renderTopics();
-    })();
-</script>
+            document.getElementById('closeAdminBtn').addEventListener('click', () => {
+                document.getElementById('adminArea').style.display = 'none';
+            });
+
+            // Закрытие модалок
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if(e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            });
+
+            // ========== СТАРТ ==========
+            renderTopics();
+        })();
+    </script>
 </body>
 </html>
