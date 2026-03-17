@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 QuizMaster · Яркая версия</title>
+    <title>🎯 QuizMaster · 15 вопросов</title>
     <style>
         * {
             margin: 0;
@@ -652,4 +652,291 @@
                 };
             }
 
-            // ========== ПОДГОТОВКА ВОПРОСОВ ДЛ
+            // ========== ПОДГОТОВКА ВОПРОСОВ ДЛЯ ТЕМЫ ==========
+            function getPreparedQuestions(topicId) {
+                let questions = [...questionsDB[topicId]];
+                
+                // Перемешиваем вопросы
+                questions = shuffleArray(questions);
+                
+                // Перемешиваем ответы в каждом вопросе
+                questions = questions.map(q => shuffleOptions(q));
+                
+                return questions;
+            }
+
+            // ========== API ФУНКЦИИ ==========
+            async function loadUsers() {
+                try {
+                    const res = await fetch(`${API_DATA}?type=user`);
+                    return await res.json();
+                } catch(e) {
+                    return [];
+                }
+            }
+
+            async function loadAnswers() {
+                try {
+                    const res = await fetch(`${API_DATA}?type=answer`);
+                    return await res.json();
+                } catch(e) {
+                    return [];
+                }
+            }
+
+            async function saveUser(user) {
+                const res = await fetch(API_DATA, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(user)
+                });
+                return await res.json();
+            }
+
+            async function updateUser(userId, data) {
+                await fetch(`${API_DATA}/${userId}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+            }
+
+            async function saveAnswer(answer) {
+                await fetch(API_DATA, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(answer)
+                });
+            }
+
+            // ========== ВХОД ПО НИКУ ==========
+            document.getElementById('setNickBtn').addEventListener('click', async () => {
+                const nickname = document.getElementById('nickInput').value.trim();
+                if(!nickname) {
+                    alert('Введите имя!');
+                    return;
+                }
+
+                const users = await loadUsers();
+                let user = users.find(u => u.username === nickname);
+
+                if(!user) {
+                    const newUser = {
+                        type: 'user',
+                        username: nickname,
+                        score: 0,
+                        gamesPlayed: 0,
+                        registered: new Date().toISOString()
+                    };
+                    user = await saveUser(newUser);
+                }
+
+                currentUser = user;
+                document.getElementById('profileArea').style.display = 'block';
+                document.getElementById('profileUsername').textContent = user.username;
+                document.getElementById('profileScore').textContent = user.score || 0;
+                
+                updateRating();
+            });
+
+            // ========== РЕЙТИНГ ==========
+            async function updateRating() {
+                const users = await loadUsers();
+                const sorted = [...users].sort((a,b) => (b.score || 0) - (a.score || 0));
+                let html = '<tr><th>Игрок</th><th>Очки</th></tr>';
+                sorted.forEach(u => {
+                    html += `<tr><td>${u.username}</td><td>${u.score || 0}</td></tr>`;
+                });
+                document.getElementById('ratingTable').innerHTML = html;
+            }
+
+            document.getElementById('showRatingBtn').addEventListener('click', async () => {
+                await updateRating();
+                document.getElementById('ratingArea').style.display = 'block';
+            });
+
+            // ========== ТЕМЫ ==========
+            function renderTopics() {
+                const grid = document.getElementById('topicsGrid');
+                grid.innerHTML = topics.map(t => `
+                    <div class="topic-card" data-id="${t.id}">
+                        <div class="topic-icon">${t.icon}</div>
+                        <div class="topic-name">${t.name}</div>
+                        <div class="topic-count">${t.count} вопросов</div>
+                    </div>
+                `).join('');
+
+                document.querySelectorAll('.topic-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        if(!currentUser) {
+                            alert('Сначала введите имя и нажмите "Играть"');
+                            return;
+                        }
+                        document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+                        card.classList.add('selected');
+                        const id = parseInt(card.dataset.id);
+                        currentTopic = topics.find(t => t.id === id);
+                        currentQuestions = getPreparedQuestions(id);
+                        currentQuestionIndex = 0;
+                        selectedOption = null;
+                        answerSelected = false;
+                        
+                        if(currentQuestions.length > 0) {
+                            showQuestion();
+                            document.getElementById('quizArea').style.display = 'block';
+                        }
+                    });
+                });
+            }
+
+            function showQuestion() {
+                const q = currentQuestions[currentQuestionIndex];
+                document.getElementById('questionText').innerText = q.text;
+                
+                let html = '';
+                q.options.forEach((opt, idx) => {
+                    html += `<button class="option-btn" data-opt="${idx+1}">${opt}</button>`;
+                });
+                document.getElementById('optionsContainer').innerHTML = html;
+                
+                selectedOption = null;
+                answerSelected = false;
+                
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.classList.remove('selected', 'correct', 'wrong');
+                    btn.addEventListener('click', (e) => {
+                        if(answerSelected) return;
+                        const opt = parseInt(btn.dataset.opt);
+                        selectedOption = opt;
+                        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                        btn.classList.add('selected');
+                    });
+                });
+
+                const continueBtn = document.getElementById('continueBtn');
+                continueBtn.classList.remove('hidden');
+                continueBtn.onclick = () => checkAnswer(q);
+            }
+
+            async function checkAnswer(q) {
+                if(!selectedOption) {
+                    alert('Выберите ответ!');
+                    return;
+                }
+
+                answerSelected = true;
+                const correct = (selectedOption === q.correct);
+
+                // Подсвечиваем правильный и неправильный
+                document.querySelectorAll('.option-btn').forEach(btn => {
+                    const optVal = parseInt(btn.dataset.opt);
+                    if(optVal === q.correct) {
+                        btn.classList.add('correct');
+                    } else if(optVal === selectedOption && !correct) {
+                        btn.classList.add('wrong');
+                    }
+                });
+
+                if(currentUser && correct) {
+                    const answer = {
+                        type: 'answer',
+                        userId: currentUser.id,
+                        username: currentUser.username,
+                        topicId: currentTopic.id,
+                        questionText: q.text,
+                        correct: true,
+                        points: 10,
+                        timestamp: new Date().toISOString()
+                    };
+                    await saveAnswer(answer);
+                    
+                    currentUser.score = (currentUser.score || 0) + 10;
+                    await updateUser(currentUser.id, currentUser);
+                    document.getElementById('profileScore').textContent = currentUser.score;
+                    
+                    await updateRating();
+                }
+
+                // Прячем кнопку продолжения
+                document.getElementById('continueBtn').classList.add('hidden');
+                
+                // Автоматически переходим к следующему вопросу через 1.5 секунды
+                setTimeout(() => {
+                    if(currentQuestionIndex < currentQuestions.length - 1) {
+                        currentQuestionIndex++;
+                        showQuestion();
+                    } else {
+                        alert('Тема пройдена! Твой счёт: ' + (currentUser?.score || 0));
+                        document.getElementById('quizArea').style.display = 'none';
+                    }
+                }, 1500);
+            }
+
+            // ========== АДМИНКА ==========
+            let clickCount = 0;
+            document.getElementById('logo').addEventListener('click', () => {
+                clickCount++;
+                if(clickCount >= 5) {
+                    document.getElementById('adminLoginModal').classList.add('active');
+                    clickCount = 0;
+                }
+                setTimeout(() => clickCount = 0, 3000);
+            });
+
+            document.getElementById('adminLoginBtn').addEventListener('click', () => {
+                const login = document.getElementById('adminLogin').value;
+                const pass = document.getElementById('adminPass').value;
+                if(login === ADMIN_LOGIN && pass === ADMIN_PASS) {
+                    document.getElementById('adminLoginModal').classList.remove('active');
+                    document.getElementById('adminArea').style.display = 'block';
+                    showAdminUsers();
+                } else {
+                    alert('Неверный логин/пароль');
+                }
+            });
+
+            async function showAdminUsers() {
+                const users = await loadUsers();
+                let html = '<table class="admin-table"><tr><th>ID</th><th>Логин</th><th>Очки</th><th>Дата</th></tr>';
+                users.forEach(u => {
+                    html += `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.score || 0}</td><td>${new Date(u.registered).toLocaleString() || ''}</td></tr>`;
+                });
+                html += '</table>';
+                document.getElementById('adminContent').innerHTML = html;
+            }
+
+            document.querySelectorAll('.admin-tab').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    if(e.target.dataset.tab === 'users') {
+                        await showAdminUsers();
+                    } else if(e.target.dataset.tab === 'answers') {
+                        const answers = await loadAnswers();
+                        let html = '<table class="admin-table"><tr><th>Игрок</th><th>Вопрос</th><th>Верно</th><th>Очки</th></tr>';
+                        answers.forEach(a => {
+                            html += `<tr><td>${a.username}</td><td>${a.questionText?.substring(0,30)}...</td><td>${a.correct ? '✅' : '❌'}</td><td>${a.points}</td></tr>`;
+                        });
+                        html += '</table>';
+                        document.getElementById('adminContent').innerHTML = html;
+                    }
+                });
+            });
+
+            document.getElementById('closeAdminBtn').addEventListener('click', () => {
+                document.getElementById('adminArea').style.display = 'none';
+            });
+
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if(e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            });
+
+            renderTopics();
+        })();
+    </script>
+</body>
+</html>
